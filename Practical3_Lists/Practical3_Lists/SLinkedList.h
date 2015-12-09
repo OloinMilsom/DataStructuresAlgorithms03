@@ -127,30 +127,34 @@ void SLinkedList<T, InputIterator>::insertAfter(InputIterator & position, T elem
 
 template <typename T, typename InputIterator>
 void SLinkedList<T, InputIterator>::insertBefore(InputIterator & position, T element) {
-
+	// the position we are inserting before
 	SListNode<T>* pTemp = position.ptr();
-	SListNode<T>* pNewnode = new SListNode<T>(element, this);
-	if (pTemp != 0) {
-		pNewnode->setNext(pTemp);
-	}
-	else 
-	{
-		m_pTail = pNewnode;
-	}
 
-	if (pTemp != m_pHead){
-		SListNode<T>* prevNode = m_pHead;
-		while (prevNode != 0 && prevNode->next() != pTemp)
-		{
-			prevNode = prevNode->next();
+	// the new node in the list
+	SListNode<T>* pNewnode = new SListNode<T>(element, this);
+
+	// pTemp is not null
+	if (pTemp != 0) {
+		// set the new node to point to our position
+		pNewnode->setNext(pTemp);
+
+		// if position is equal to the head then we have to behave differently
+		if (pTemp != m_pHead){
+			// iterate through list from the head to find the previous node
+			SListNode<T>* prevNode = m_pHead;
+			while (prevNode != 0 && prevNode->next() != pTemp)
+			{
+				prevNode = prevNode->next();
+			}
+			// found the previous node so set it's next to newnode
+			prevNode->setNext(pNewnode);
 		}
-		prevNode->setNext(pNewnode);
+		else{
+			// new node inserted before head so it becomes the new head
+			m_pHead = pNewnode;
+		}
+		m_count++;
 	}
-	else{
-		m_pHead = pNewnode;
-	}
-		
-	m_count++;
 }
 
 template <typename T, typename InputIterator>
